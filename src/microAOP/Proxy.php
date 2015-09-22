@@ -271,8 +271,10 @@ class Proxy
     {
         foreach ($aspects as $aspect) {
             if (method_exists($aspect, $methodName)) {
-                $method = new \ReflectionMethod($aspect, $methodName);
-                $method->invoke($aspect, $parameter);
+                //To improve efficiency, executed aspects method directly, not using reflection
+                $aspect->$methodName($parameter);
+                //$method = new \ReflectionMethod($aspect, $methodName);
+                //$method->invoke($aspect, $parameter);
             }
         }
     }
