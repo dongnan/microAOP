@@ -60,20 +60,13 @@ class Proxy
      */
     private function _add_aspects_($aspects)
     {
-        if (is_array($aspects)) {
-            foreach ($aspects as $aspect) {
-                if (is_object($aspect)) {
-                    $className = get_class($aspect);
-                    $this->aspects[$className] = $aspect;
-                } elseif (is_string($aspect) && class_exists($aspect)) {
-                    $this->aspects[$aspect] = new $aspect();
-                }
+        foreach ($aspects as $aspect) {
+            if (is_object($aspect)) {
+                $className = get_class($aspect);
+                $this->aspects[$className] = $aspect;
+            } elseif (is_string($aspect) && class_exists($aspect)) {
+                $this->aspects[$aspect] = new $aspect();
             }
-        } elseif (is_object($aspects)) {
-            $className = get_class($aspects);
-            $this->aspects[$className] = $aspects;
-        } elseif (is_string($aspects) && class_exists($aspects)) {
-            $this->aspects[$aspects] = new $aspects();
         }
     }
 
@@ -83,20 +76,13 @@ class Proxy
      */
     private function _remove_aspects_($aspects)
     {
-        if (is_array($aspects)) {
-            foreach ($aspects as $aspect) {
-                if (is_object($aspect)) {
-                    $className = get_class($aspect);
-                    unset($this->aspects[$className]);
-                } elseif (is_string($aspect)) {
-                    unset($this->aspects[$aspect]);
-                }
+        foreach ($aspects as $aspect) {
+            if (is_object($aspect)) {
+                $className = get_class($aspect);
+                unset($this->aspects[$className]);
+            } elseif (is_string($aspect)) {
+                unset($this->aspects[$aspect]);
             }
-        } elseif (is_object($aspects)) {
-            $className = get_class($aspects);
-            unset($this->aspects[$className]);
-        } elseif (is_string($aspects)) {
-            unset($this->aspects[$aspects]);
         }
     }
 
