@@ -1,7 +1,7 @@
 <?php
 
 /**
- * microAOP - 简介而强大的AOP库
+ * microAOP - 简洁而强大的AOP库
  *
  * @author      Dong Nan <hidongnan@gmail.com>
  * @copyright   (c) Dong Nan http://idongnan.cn All rights reserved.
