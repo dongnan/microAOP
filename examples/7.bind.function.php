@@ -2,39 +2,32 @@
 
 require_once('../src/microAOP/Proxy.php');
 
-class Model
-{
+class Model {
 
-    public function foo()
-    {
+    public function foo() {
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
 
-    public function fooOne()
-    {
+    public function fooOne() {
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
 
-    public function two()
-    {
+    public function two() {
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
 
-    public function three()
-    {
+    public function three() {
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
 
 }
 
-function foo()
-{
+function foo() {
     echo '------------------------------------------' . PHP_EOL;
     echo __FUNCTION__ . ' has been executed' . PHP_EOL;
 }
 
-function forRegex()
-{
+function forRegex() {
     echo '------------------------------------------' . PHP_EOL;
     echo __FUNCTION__ . ' has been executed' . PHP_EOL;
 }
@@ -44,17 +37,14 @@ $closure = function() {
     echo __FUNCTION__ . ' has been executed' . PHP_EOL;
 };
 
-class Aspect
-{
+class Aspect {
 
-    static public function foo()
-    {
+    static public function foo() {
         echo '------------------------------------------' . PHP_EOL;
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
 
-    public function two()
-    {
+    public function two() {
         echo '------------------------------------------' . PHP_EOL;
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }

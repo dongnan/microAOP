@@ -2,27 +2,22 @@
 
 require_once('../src/microAOP/Proxy.php');
 
-class Model
-{
+class Model {
 
-    public function save()
-    {
+    public function save() {
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
 
 }
 
-class Aspect
-{
+class Aspect {
 
-    public function saveBefore($params)
-    {
+    public function saveBefore($params) {
         echo '------------------------------------------' . PHP_EOL;
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
 
-    public function saveAfter($params)
-    {
+    public function saveAfter($params) {
         echo '------------------------------------------' . PHP_EOL;
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }

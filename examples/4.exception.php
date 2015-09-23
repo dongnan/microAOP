@@ -2,22 +2,18 @@
 
 require_once('../src/microAOP/Proxy.php');
 
-class Model
-{
+class Model {
 
-    public function err()
-    {
+    public function err() {
         echo __METHOD__ . ' has been executed' . PHP_EOL;
         throw new Exception("Oops! There's an exception!");
     }
 
 }
 
-class Aspect
-{
+class Aspect {
 
-    public function errException($params)
-    {
+    public function errException($params) {
         echo '------------------------------------------' . PHP_EOL;
         echo __METHOD__ . ' has been executed' . PHP_EOL;
         var_dump($params['exception']);

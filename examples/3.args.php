@@ -2,21 +2,17 @@
 
 require_once('../src/microAOP/Proxy.php');
 
-class Model
-{
+class Model {
 
-    public function args($one, $two, $three = 'three')
-    {
+    public function args($one, $two, $three = 'three') {
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
 
 }
 
-class Aspect
-{
+class Aspect {
 
-    public function argsAlways($params)
-    {
+    public function argsAlways($params) {
         echo '------------------------------------------' . PHP_EOL;
         echo __METHOD__ . ' has been executed' . PHP_EOL;
         print_r($params['args']);

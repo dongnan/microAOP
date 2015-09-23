@@ -2,49 +2,40 @@
 
 require_once('../src/microAOP/Proxy.php');
 
-class Model
-{
+class Model {
 
-    public function foo()
-    {
+    public function foo() {
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
 
 }
 
-class AspectOne
-{
+class AspectOne {
 
-    public function fooBefore($params)
-    {
+    public function fooBefore($params) {
         echo '------------------------------------------' . PHP_EOL;
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
 
-    public function fooAfter($params)
-    {
+    public function fooAfter($params) {
         echo '------------------------------------------' . PHP_EOL;
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
 
 }
 
-class AspectTwo
-{
+class AspectTwo {
 
-    public function fooBefore($params)
-    {
+    public function fooBefore($params) {
         echo '------------------------------------------' . PHP_EOL;
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
 
 }
 
-class AspectThree
-{
+class AspectThree {
 
-    public function fooAfter($params)
-    {
+    public function fooAfter($params) {
         echo '------------------------------------------' . PHP_EOL;
         echo __METHOD__ . ' has been executed' . PHP_EOL;
     }
