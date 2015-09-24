@@ -293,11 +293,11 @@ class Proxy {
 
     public function __call($name, $arguments) {
         if (!is_object($this->_mandator_) || !method_exists($this->_mandator_, $name)) {
-            return null;
+            throw new \Exception("the method '{$name}' doesn't exist in class {$this->_mandatorClassName_}");
         }
         $reflectionMethod = new \ReflectionMethod($this->_mandator_, $name);
         if (!$reflectionMethod->isPublic()) {
-            return null;
+            throw new \Exception("the method '{$name}' cann't access public in class {$this->_mandatorClassName_}");
         }
         $args = [];
         if (isset(self::$_params_[$this->_mandatorClassName_][$name])) {
