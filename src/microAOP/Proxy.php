@@ -23,47 +23,47 @@ class Proxy {
      * 被代理类
      * @var object 
      */
-    private $mandator;
+    private $_mandator_;
 
     /**
      * 被代理类的类名
      * @var string 
      */
-    private $mandatorClassName;
+    private $_mandatorClassName_;
 
     /**
      * 已绑定的切面类的类名数组
      * @var array 
      */
-    private $aspects = [];
+    private $_aspects_ = [];
 
     /**
      * 已绑定的切面类的方法数组
      * @var array 
      */
-    private $aspectMethods = [];
+    private $_aspectMethods_ = [];
 
     /**
      * 已绑定的函数数组
      * @var array 
      */
-    private $funcs = [];
+    private $_funcs_ = [];
 
     /**
      * 被代理类的方法的参数数组
      * @var array 
      */
-    static private $_params = [];
+    static private $_params_ = [];
 
     /**
      * 代理类构造方法
      * @param object $mandator  被代理类实例
      */
     private function __construct($mandator) {
-        $this->mandator = $mandator;
-        $this->mandatorClassName = get_class($mandator);
-        if (!isset(self::$_params[$this->mandatorClassName])) {
-            self::$_params[$this->mandatorClassName] = [];
+        $this->_mandator_ = $mandator;
+        $this->_mandatorClassName_ = get_class($mandator);
+        if (!isset(self::$_params_[$this->_mandatorClassName_])) {
+            self::$_params_[$this->_mandatorClassName_] = [];
         }
     }
 
@@ -73,14 +73,14 @@ class Proxy {
      * @param object $aspect    切面类实例
      */
     private function _add_aspect_($name, $aspect) {
-        if (!in_array($name, $this->aspects)) {
-            $this->aspects[] = $name;
+        if (!in_array($name, $this->_aspects_)) {
+            $this->_aspects_[] = $name;
             $methods = get_class_methods($aspect);
             foreach ($methods as $method) {
-                if (!isset($this->aspectMethods[$method])) {
-                    $this->aspectMethods[$method] = [];
+                if (!isset($this->_aspectMethods_[$method])) {
+                    $this->_aspectMethods_[$method] = [];
                 }
-                $this->aspectMethods[$method][$name] = $aspect;
+                $this->_aspectMethods_[$method][$name] = $aspect;
             }
         }
     }
@@ -105,12 +105,12 @@ class Proxy {
      * @param string $name 已绑定切面类实例的类名
      */
     private function _remove_aspect_($name) {
-        if ($key = array_search($name, $this->aspects) !== false) {
-            unset($this->aspects[$key]);
-            foreach ($this->aspectMethods as $method => &$objects) {
+        if ($key = array_search($name, $this->_aspects_) !== false) {
+            unset($this->_aspects_[$key]);
+            foreach ($this->_aspectMethods_ as $method => &$objects) {
                 unset($objects[$name]);
                 if (empty($objects)) {
-                    unset($this->aspectMethods[$method]);
+                    unset($this->_aspectMethods_[$method]);
                 }
             }
         }
@@ -138,15 +138,15 @@ class Proxy {
      * @param array $funcs      需要绑定的函数集合
      */
     private function _add_funcs_($rules, $position, $funcs) {
-        if (!isset($this->funcs[$rules])) {
-            $this->funcs[$rules] = [];
+        if (!isset($this->_funcs_[$rules])) {
+            $this->_funcs_[$rules] = [];
         }
-        if (!isset($this->funcs[$rules][$position])) {
-            $this->funcs[$rules][$position] = [];
+        if (!isset($this->_funcs_[$rules][$position])) {
+            $this->_funcs_[$rules][$position] = [];
         }
         foreach ($funcs as $func) {
             if (is_callable($func)) {
-                $this->funcs[$rules][$position][] = $func;
+                $this->_funcs_[$rules][$position][] = $func;
             }
         }
     }
@@ -158,12 +158,12 @@ class Proxy {
      */
     private function _remove_funcs_($rules, $position = null) {
         if (empty($position)) {
-            if (isset($this->funcs[$rules])) {
-                unset($this->funcs[$rules]);
+            if (isset($this->_funcs_[$rules])) {
+                unset($this->_funcs_[$rules]);
             }
         } else {
-            if (isset($this->funcs[$rules][$position])) {
-                unset($this->funcs[$rules][$position]);
+            if (isset($this->_funcs_[$rules][$position])) {
+                unset($this->_funcs_[$rules][$position]);
             }
         }
     }
@@ -292,59 +292,59 @@ class Proxy {
     }
 
     public function __call($name, $arguments) {
-        if (!is_object($this->mandator) || !method_exists($this->mandator, $name)) {
+        if (!is_object($this->_mandator_) || !method_exists($this->_mandator_, $name)) {
             return null;
         }
-        $reflectionMethod = new \ReflectionMethod($this->mandator, $name);
+        $reflectionMethod = new \ReflectionMethod($this->_mandator_, $name);
         if (!$reflectionMethod->isPublic()) {
             return null;
         }
         $args = [];
-        if (isset(self::$_params[$this->mandatorClassName][$name])) {
-            foreach (self::$_params[$this->mandatorClassName][$name] as $key => $param) {
+        if (isset(self::$_params_[$this->_mandatorClassName_][$name])) {
+            foreach (self::$_params_[$this->_mandatorClassName_][$name] as $key => $param) {
                 $args[$param['name']] = isset($arguments[$key]) ? $arguments[$key] : $param['default'];
             }
         } else {
-            self::$_params[$this->mandatorClassName][$name] = [];
+            self::$_params_[$this->_mandatorClassName_][$name] = [];
             $parameters = $reflectionMethod->getParameters();
             foreach ($parameters as $key => $parameter) {
                 $param = ['name' => $parameter->getName(), 'default' => $parameter->isDefaultValueAvailable() ? $parameter->getDefaultValue() : null];
-                self::$_params[$this->mandatorClassName][$name][$key] = $param;
+                self::$_params_[$this->_mandatorClassName_][$name][$key] = $param;
                 $args[$param['name']] = isset($arguments[$key]) ? $arguments[$key] : $param['default'];
             }
         }
 
-        $params = ['class' => $this->mandatorClassName, 'method' => $name, 'args' => $args];
-        $funcs = self::_get_match_funcs_($this->funcs, $name);
-        empty($this->aspectMethods["{$name}Before"]) || self::_exec_aspects_($this->aspectMethods["{$name}Before"], "{$name}Before", $params);
+        $params = ['class' => $this->_mandatorClassName_, 'method' => $name, 'args' => $args];
+        $funcs = self::_get_match_funcs_($this->_funcs_, $name);
+        empty($this->_aspectMethods_["{$name}Before"]) || self::_exec_aspects_($this->_aspectMethods_["{$name}Before"], "{$name}Before", $params);
         empty($funcs['before']) || self::_exec_funcs_($funcs['before'], $params);
         try {
-            $result = $reflectionMethod->invokeArgs($this->mandator, $arguments);
+            $result = $reflectionMethod->invokeArgs($this->_mandator_, $arguments);
             $params['return'] = $result;
-            empty($this->aspectMethods["{$name}After"]) || self::_exec_aspects_($this->aspectMethods["{$name}After"], "{$name}After", $params);
+            empty($this->_aspectMethods_["{$name}After"]) || self::_exec_aspects_($this->_aspectMethods_["{$name}After"], "{$name}After", $params);
             empty($funcs['after']) || self::_exec_funcs_($funcs['after'], $params);
         } catch (\Exception $ex) {
             $params['exception'] = $ex;
-            empty($this->aspectMethods["{$name}Exception"]) || self::_exec_aspects_($this->aspectMethods["{$name}Exception"], "{$name}Exception", $params);
+            empty($this->_aspectMethods_["{$name}Exception"]) || self::_exec_aspects_($this->_aspectMethods_["{$name}Exception"], "{$name}Exception", $params);
             empty($funcs['exception']) || self::_exec_funcs_($funcs['exception'], $params);
         }
-        empty($this->aspectMethods["{$name}Always"]) || self::_exec_aspects_($this->aspectMethods["{$name}Always"], "{$name}Always", $params);
+        empty($this->_aspectMethods_["{$name}Always"]) || self::_exec_aspects_($this->_aspectMethods_["{$name}Always"], "{$name}Always", $params);
         empty($funcs['always']) || self::_exec_funcs_($funcs['always'], $params);
         return isset($result) ? $result : null;
     }
 
     public function __set($name, $value) {
-        if (!is_object($this->mandator)) {
+        if (!is_object($this->_mandator_)) {
             return false;
         }
-        $this->mandator->$name = $value;
+        $this->_mandator_->$name = $value;
     }
 
     public function __get($name) {
-        if (!is_object($this->mandator)) {
+        if (!is_object($this->_mandator_)) {
             return false;
         }
-        return $this->mandator->$name;
+        return $this->_mandator_->$name;
     }
 
 }
