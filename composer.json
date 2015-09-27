@@ -1,7 +1,7 @@
 {
     "name": "dongnan/microaop",
     "type": "library",
-    "description": "A mirco and powerful AOP library for PHP",
+    "description": "A mirco & powerful AOP library for PHP",
     "keywords": ["microaop", "aop", "library"],
     "homepage": "http://github.com/dongnan/microAOP/",
     "license": "MIT",
