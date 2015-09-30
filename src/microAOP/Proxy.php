@@ -94,8 +94,14 @@ class Proxy {
             if (is_object($aspect)) {
                 $className = get_class($aspect);
                 $this->_add_aspect_($className, $aspect);
-            } elseif (is_string($aspect) && class_exists($aspect)) {
-                $this->_add_aspect_($aspect, new $aspect());
+            } elseif (is_string($aspect)) {
+                if (class_exists($aspect)) {
+                    $this->_add_aspect_($aspect, new $aspect());
+                } else {
+                    throw new \Exception("class '{$aspect}' is not found");
+                }
+            } else {
+                throw new \Exception("type of the aspect '{$aspect}' is incorrect");
             }
         }
     }
@@ -127,6 +133,8 @@ class Proxy {
                 $this->_remove_aspect_($className);
             } elseif (is_string($aspect)) {
                 $this->_remove_aspect_($aspect);
+            } else {
+                throw new \Exception("type of the aspect '{$aspect}' is incorrect");
             }
         }
     }
