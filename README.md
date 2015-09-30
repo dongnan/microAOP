@@ -78,10 +78,10 @@ $model->save();
 执行后输出:
 ```
 ------------------------------------------
-Aspect::saveBefore has been executed
-Model::save has been executed
+yournamespace\Aspect::saveBefore has been executed
+yournamespace\Model::save has been executed
 ------------------------------------------
-Aspect::saveAfter has been executed
+yournamespace\Aspect::saveAfter has been executed
 
 ```
 
