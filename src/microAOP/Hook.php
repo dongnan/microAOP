@@ -105,6 +105,7 @@ class Hook {
             return;
         }
         $args = func_get_args();
+        array_shift($args);
         self::unbindMultiple($name, $args);
     }
 
